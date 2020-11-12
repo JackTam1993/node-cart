@@ -1,21 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-var db = require('../db/db');
-
-router.get('/', async function(req, res, next) {
-
-    try {
-        let result = await db.query('select * from address');
-
-        res.json({
-            code: 0,
-            data: result
-        })
-    } catch(e) {
-        res.statusCode(500);
-    }
-});
+const login = require('../common/login/login');
+const auth = require('../common/auth/auth');
 
 // 顾客注册接口
 router.post('/register', async (req, res, next) => {
@@ -24,7 +11,20 @@ router.post('/register', async (req, res, next) => {
 
 // 顾客登录接口
 router.post('/login', async (req, res, next) => {
+    const {userName, password} = req.body;
 
+    // 从数据库判断账号密码是否正确
+    let result = await login.checkPassword(userName, password);
+
+    // 正确的话返回token，错误的话返回错误信息
+    let token = auth.sign({
+        userName
+    });
+
+    res.json({
+        code: 0,
+        data: token
+    })
 })
 
 // 获取顾客信息接口
