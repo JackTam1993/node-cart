@@ -19,11 +19,11 @@ router.get('/', async function(req, res, next) {
 
 // 顾客注册接口
 router.post('/register', async (req, res, next) => {
-    
+
 })
 
 // 顾客登录接口
-router.get('/login', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
 
 })
 
