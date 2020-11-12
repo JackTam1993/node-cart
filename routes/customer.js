@@ -17,14 +17,22 @@ router.post('/login', async (req, res, next) => {
     let result = await login.checkPassword(userName, password);
 
     // 正确的话返回token，错误的话返回错误信息
-    let token = auth.sign({
-        userName
-    });
-
-    res.json({
-        code: 0,
-        data: token
-    })
+    if(result) {
+        let token = auth.sign({
+            userName
+        });
+    
+        res.json({
+            code: 0,
+            data: token
+        })
+    } else {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+    
 })
 
 // 获取顾客信息接口
