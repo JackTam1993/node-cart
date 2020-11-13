@@ -3,23 +3,42 @@ var router = express.Router();
 
 const login = require('../common/login/login');
 const auth = require('../common/auth/auth');
+const register = require('../common/register/register');
 
 // 顾客注册接口
 router.post('/register', async (req, res, next) => {
+    const {customer_name, password, street, state, city} = req.body;
 
+    const checkUserAlreadyRegistered = await register.checkUserAlreadyRegistered(customer_name);
+    if(checkUserAlreadyRegistered) {
+        res.json({
+            code: 1,
+            data: '用户已注册'
+        })
+    } else {
+        let result = await register.createUser(customer_name, password, street, state, city);
+        console.log(result);
+
+
+
+        res.json({
+            code: 0,
+            data: '注册成功'
+        })
+    }
 })
 
 // 顾客登录接口
 router.post('/login', async (req, res, next) => {
-    const {userName, password} = req.body;
+    const {customer_name, password} = req.body;
 
     // 从数据库判断账号密码是否正确
-    let result = await login.checkPassword(userName, password);
+    let result = await login.checkPassword(customer_name, password);
 
     // 正确的话返回token，错误的话返回错误信息
     if(result) {
         let token = auth.sign({
-            userName
+            customer_name
         });
     
         res.json({
