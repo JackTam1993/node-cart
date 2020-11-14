@@ -4,6 +4,7 @@ var router = express.Router();
 const login = require('../common/login/login');
 const auth = require('../common/auth/auth');
 const register = require('../common/register/register');
+const customerInfo = require('../common/customerInfo/customerInfo');
 
 // 顾客注册接口
 router.post('/register', async (req, res, next) => {
@@ -56,6 +57,14 @@ router.post('/login', async (req, res, next) => {
 
 // 获取顾客信息接口
 router.get('/customer-info', async (req, res, next) => {
+
+    const {customer_name} = req.query;
+    let result = await customerInfo.getInfo(customer_name);
+
+    res.json({
+        code: result == null ? 1 : 0,
+        data: result
+    })
 
 })
 
