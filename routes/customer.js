@@ -58,8 +58,28 @@ router.post('/login', async (req, res, next) => {
 // 获取顾客信息接口
 router.get('/customer-info', async (req, res, next) => {
 
-    const {customer_name} = req.query;
-    let result = await customerInfo.getInfo(customer_name);
+    const {token} = req.headers;
+
+    if(!token) {
+        // 没有带token
+        res.json({
+            code: 1,
+            data: '缺少token'
+        })
+
+        return;
+    }
+
+    // 验证用户登录信息
+    let verifyResult = auth.verify(token);
+    if(!verifyResult.customer_name) {
+        res.json({
+            code: 1,
+            data: '用户未登录'
+        })
+    }
+
+    let result = await customerInfo.getInfo(verifyResult.customer_name);
 
     res.json({
         code: result == null ? 1 : 0,
