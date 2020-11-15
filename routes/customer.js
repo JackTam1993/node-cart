@@ -6,6 +6,32 @@ const auth = require('../common/auth/auth');
 const register = require('../common/register/register');
 const customerInfo = require('../common/customerInfo/customerInfo');
 
+let checkLogin = (req, res, next) => {
+    const {token} = req.headers;
+
+    if(!token) {
+        // 没有带token
+        res.json({
+            code: 1,
+            data: '缺少token'
+        })
+
+        return;
+    }
+
+    // 验证用户登录信息
+    let verifyResult = auth.verify(token);
+    if(!verifyResult.customer_name) {
+        res.json({
+            code: 1,
+            data: '用户未登录'
+        })
+
+        return;
+    }
+    next(verifyResult.customer_name);
+}
+
 // 顾客注册接口
 router.post('/register', async (req, res, next) => {
     const {customer_name, password, street, state, city} = req.body;
@@ -56,30 +82,9 @@ router.post('/login', async (req, res, next) => {
 })
 
 // 获取顾客信息接口
-router.get('/customer-info', async (req, res, next) => {
+router.get('/customer-info', checkLogin, async (customer_name, req, res, next) => {
 
-    const {token} = req.headers;
-
-    if(!token) {
-        // 没有带token
-        res.json({
-            code: 1,
-            data: '缺少token'
-        })
-
-        return;
-    }
-
-    // 验证用户登录信息
-    let verifyResult = auth.verify(token);
-    if(!verifyResult.customer_name) {
-        res.json({
-            code: 1,
-            data: '用户未登录'
-        })
-    }
-
-    let result = await customerInfo.getInfo(verifyResult.customer_name);
+    let result = await customerInfo.getInfo(customer_name);
 
     res.json({
         code: result == null ? 1 : 0,
@@ -94,7 +99,16 @@ router.post('/edit-customer-info', async (req, res, next) => {
 })
 
 // 更新顾客密码接口
-router.post('/update-customer-password', async (req, res, next) => {
+router.post('/update-customer-password', checkLogin, async (customer_name, req, res, next) => {
+
+    const {password} = req.body;
+
+    let result = await customerInfo.updatePassword(customer_name, password);
+
+    res.json({
+        code: 0,
+        data: 'success'
+    })
 
 })
 

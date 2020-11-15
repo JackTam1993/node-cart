@@ -6,6 +6,11 @@ const customerInfo = {
 
         let data = result.rows.length == 0 ? null : result.rows[0];
         return data;
+    },
+    async updatePassword(customer_name, password) {
+        let result = await db.query(`update customer set password = '${password}' where customer_name = '${customer_name}'`);
+
+        return true;
     }
 }
 
