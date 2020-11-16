@@ -36,6 +36,18 @@ const customerInfo = {
         } catch (error) {
             return null;
         }
+    },
+    async addAddress(customer_id, street, state, city) {
+        try {
+            let address = await db.query(`insert into address (street, city, state) values ('${street}', '${city}', '${state}' )`);
+            let addressItem = await db.query(`select * from address where street = '${street}' and city = '${city}' and state = '${state}'`);
+            let address_id = addressItem.rows[addressItem.rows.length - 1].address_id;
+            await db.query(`insert into customer_addr (customer_id, address_id) values ('${customer_id}', '${address_id}' )`)
+
+            return true;
+        } catch (error) {
+            return null
+        }
     }
 }
 

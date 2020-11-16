@@ -147,8 +147,23 @@ router.get('/get-address-list', checkLogin, async (customer_id, req, res, next) 
 })
 
 // 获取新增收件信息接口
-router.post('/create-address', async (req, res, next) => {
+router.post('/create-address', checkLogin, async (customer_id, req, res, next) => {
 
+    const {street, state, city} = req.body;
+
+    try {
+        let result = await customerInfo.addAddress(customer_id, street, state, city);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 0,
+            data: null
+        })
+    }
 })
 
 // 获取更新收件信息接口
