@@ -94,16 +94,32 @@ router.get('/customer-info', checkLogin, async (customer_id, req, res, next) => 
 })
 
 // 更新顾客信息接口
-router.post('/edit-customer-info', async (req, res, next) => {
+router.post('/edit-customer-info', checkLogin, async (customer_id, req, res, next) => {
 
+    const {customer_name, street, state, city} = req.body;
+
+    try {
+        let result = await customerInfo.updateCustomerInfo(customer_id, customer_name, street, state, city);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 0,
+            data: 'error'
+        })
+    }
+    
 })
 
 // 更新顾客密码接口
-router.post('/update-customer-password', checkLogin, async (customer_name, req, res, next) => {
+router.post('/update-customer-password', checkLogin, async (customer_id, req, res, next) => {
 
     const {password} = req.body;
 
-    let result = await customerInfo.updatePassword(customer_name, password);
+    let result = await customerInfo.updatePassword(customer_id, password);
 
     res.json({
         code: 0,
