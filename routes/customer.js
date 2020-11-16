@@ -129,8 +129,21 @@ router.post('/update-customer-password', checkLogin, async (customer_id, req, re
 })
 
 // 获取收件信息接口
-router.get('/get-address-list', async (req, res, next) => {
+router.get('/get-address-list', checkLogin, async (customer_id, req, res, next) => {
 
+    try {
+        let result = await customerInfo.getAddressList(customer_id);
+
+        res.json({
+            code: 0,
+            data: result
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
 })
 
 // 获取新增收件信息接口

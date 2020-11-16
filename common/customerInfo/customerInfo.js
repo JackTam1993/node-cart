@@ -28,9 +28,14 @@ const customerInfo = {
             console.log(error)
             return null;
         }
-        
-
-
+    },
+    async getAddressList(customer_id) {
+        try {
+            let result = await db.query(`select * from address left join customer_addr on address.address_id = customer_addr.address_id where customer_id = '${customer_id}'`);
+            return result.rows;
+        } catch (error) {
+            return null;
+        }
     }
 }
 
