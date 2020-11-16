@@ -21,7 +21,7 @@ let checkLogin = (req, res, next) => {
 
     // 验证用户登录信息
     let verifyResult = auth.verify(token);
-    if(!verifyResult.customer_name) {
+    if(!verifyResult.customer_id) {
         res.json({
             code: 1,
             data: '用户未登录'
@@ -29,7 +29,7 @@ let checkLogin = (req, res, next) => {
 
         return;
     }
-    next(verifyResult.customer_name);
+    next(verifyResult.customer_id);
 }
 
 // 顾客注册接口
@@ -60,12 +60,12 @@ router.post('/login', async (req, res, next) => {
     const {customer_name, password} = req.body;
 
     // 从数据库判断账号密码是否正确
-    let result = await login.checkPassword(customer_name, password);
+    let customer_id = await login.checkPassword(customer_name, password);
 
     // 正确的话返回token，错误的话返回错误信息
-    if(result) {
+    if(customer_id) {
         let token = auth.sign({
-            customer_name
+            customer_id
         });
     
         res.json({
@@ -75,16 +75,16 @@ router.post('/login', async (req, res, next) => {
     } else {
         res.json({
             code: 1,
-            data: null
+            data: 'no such a user'
         })
     }
     
 })
 
 // 获取顾客信息接口
-router.get('/customer-info', checkLogin, async (customer_name, req, res, next) => {
+router.get('/customer-info', checkLogin, async (customer_id, req, res, next) => {
 
-    let result = await customerInfo.getInfo(customer_name);
+    let result = await customerInfo.getInfo(customer_id);
 
     res.json({
         code: result == null ? 1 : 0,
