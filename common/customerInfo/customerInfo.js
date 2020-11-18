@@ -48,6 +48,15 @@ const customerInfo = {
         } catch (error) {
             return null
         }
+    },
+    async updateAddress(customer_id, street, state, city, address_id) {
+        try {
+            let address = db.query(`update address set state = '${state}', street = '${street}', city = '${city}' from customer_addr where address.address_id = customer_addr.address_id and customer_addr.customer_id = '${customer_id}' and address.address_id = '${address_id}'`);
+
+            return true;
+        } catch (error) {
+            
+        }
     }
 }
 

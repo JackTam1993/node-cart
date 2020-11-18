@@ -167,7 +167,23 @@ router.post('/create-address', checkLogin, async (customer_id, req, res, next) =
 })
 
 // 获取更新收件信息接口
-router.post('/update-address', async (req, res, next) => {
+router.post('/update-address', checkLogin,  async (customer_id, req, res, next) => {
+
+    const {street, state, city, address_id} = req.body;
+
+    try {
+        let result = await customerInfo.updateAddress(customer_id, street, state, city, address_id);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 0,
+            data: null
+        })
+    }
 
 })
 
