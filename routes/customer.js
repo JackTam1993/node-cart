@@ -6,6 +6,7 @@ const auth = require('../common/auth/auth');
 const register = require('../common/register/register');
 const customerInfo = require('../common/customerInfo/customerInfo');
 const goods = require('../common/goods/goods');
+const cart = require('../common/cart/cart');
 
 let checkLogin = (req, res, next) => {
     const {token} = req.headers;
@@ -161,7 +162,7 @@ router.post('/create-address', checkLogin, async (customer_id, req, res, next) =
         })
     } catch (error) {
         res.json({
-            code: 0,
+            code: 1,
             data: null
         })
     }
@@ -181,7 +182,7 @@ router.post('/update-address', checkLogin,  async (customer_id, req, res, next) 
         })
     } catch (error) {
         res.json({
-            code: 0,
+            code: 1,
             data: null
         })
     }
@@ -200,7 +201,7 @@ router.get('/goods/category', async (req, res, next) => {
         })
     } catch (err) {
         res.json({
-            code: 0,
+            code: 1,
             data: null
         })
     }
@@ -220,7 +221,65 @@ router.get('/goods/list', async (req, res, next) => {
         })
     } catch (err) {
         res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 添加商品到购物车
+router.post('/cart/add', checkLogin, async (customer_id, req, res, next) => {
+
+    const {product_id, quantity} = req.body;
+
+    try {
+        let result = await cart.addCart(customer_id, product_id, quantity);
+
+        res.json({
             code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 从购物车删除商品
+router.post('/cart/del', checkLogin, async (customer_id, req, res, next) => {
+
+    const {product_id} = req.body;
+
+    try {
+        let result = await cart.delCart(customer_id, product_id);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 从购物车删除商品
+router.get('/cart/list', checkLogin, async (customer_id, req, res, next) => {
+
+    try {
+        let data = await cart.getCartList(customer_id);
+
+        res.json({
+            code: 0,
+            data
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
             data: null
         })
     }
