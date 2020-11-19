@@ -189,10 +189,30 @@ router.post('/update-address', checkLogin,  async (customer_id, req, res, next) 
 })
 
 // 获取分类列表
-router.get('/goods/list', async (req, res, next) => {
+router.get('/goods/category', async (req, res, next) => {
 
     try {
         let data = await goods.getItemList();
+
+        res.json({
+            code: 0,
+            data
+        })
+    } catch (err) {
+        res.json({
+            code: 0,
+            data: null
+        })
+    }
+})
+
+// 根据分类id获取分类下所有商品
+router.get('/goods/list', async (req, res, next) => {
+
+    const { category_id } = req.query;
+
+    try {
+        let data = await goods.getItemListByCategory(category_id);
 
         res.json({
             code: 0,
