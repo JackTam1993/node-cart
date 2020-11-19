@@ -5,6 +5,7 @@ const login = require('../common/login/login');
 const auth = require('../common/auth/auth');
 const register = require('../common/register/register');
 const customerInfo = require('../common/customerInfo/customerInfo');
+const goods = require('../common/goods/goods');
 
 let checkLogin = (req, res, next) => {
     const {token} = req.headers;
@@ -185,6 +186,24 @@ router.post('/update-address', checkLogin,  async (customer_id, req, res, next) 
         })
     }
 
+})
+
+// 获取分类列表
+router.get('/goods/list', async (req, res, next) => {
+
+    try {
+        let data = await goods.getItemList();
+
+        res.json({
+            code: 0,
+            data
+        })
+    } catch (err) {
+        res.json({
+            code: 0,
+            data: null
+        })
+    }
 })
 
 module.exports = router;
