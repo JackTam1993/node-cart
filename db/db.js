@@ -15,7 +15,7 @@ const db = {
                   done();
               
                   if(err) {
-                    reject(null)
+                    reject(err)
                   }
                   resolve(result);
                 });
