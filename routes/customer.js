@@ -227,6 +227,25 @@ router.get('/goods/list', async (req, res, next) => {
     }
 })
 
+router.get('/goods/detail', async (req, res, next) => {
+
+    const {product_id} = req.query;
+
+    try {
+        let data = await goods.getItemDetail(product_id);
+
+        res.json({
+            code: 0,
+            data
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
 // 添加商品到购物车
 router.post('/cart/add', checkLogin, async (customer_id, req, res, next) => {
 
