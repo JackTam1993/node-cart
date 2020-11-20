@@ -227,6 +227,7 @@ router.get('/goods/list', async (req, res, next) => {
     }
 })
 
+// 获取商品信息
 router.get('/goods/detail', async (req, res, next) => {
 
     const {product_id} = req.query;
@@ -303,5 +304,26 @@ router.get('/cart/list', checkLogin, async (customer_id, req, res, next) => {
         })
     }
 })
+
+router.post('/cart/submit', checkLogin, async (customer_id, req, res, next) => {
+
+    const {address_id} = req.body;
+
+    try {
+        let data = await cart.cartSubmit(customer_id, address_id);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+
 
 module.exports = router;
