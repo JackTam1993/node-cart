@@ -34,16 +34,16 @@ let checkLogin = (req, res, next) => {
 
 // staff注册接口
 router.post('/register', async (req, res, next) => {
-    const {fisrt_name, last_name, middle_name, salary, job_title, password, street, state, city} = req.body;
+    const {first_name, last_name, middle_name, salary, job_title, password, street, state, city} = req.body;
 
-    const checkUserAlreadyRegistered = await register.checkStaffAlreadyRegistered(fisrt_name, last_name, middle_name);
+    const checkUserAlreadyRegistered = await register.checkStaffAlreadyRegistered(first_name, last_name, middle_name);
     if(checkUserAlreadyRegistered) {
         res.json({
             code: 1,
             data: '用户已注册'
         })
     } else {
-        let result = await register.createStaff(fisrt_name, last_name, middle_name, salary, job_title, password, street, state, city);
+        let result = await register.createStaff(first_name, last_name, middle_name, salary, job_title, password, street, state, city);
         console.log(result);
 
         res.json({
