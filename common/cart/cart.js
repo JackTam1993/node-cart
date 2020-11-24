@@ -42,8 +42,17 @@ const cart = {
             ])
             const {street, city, state} = address.rows[0];
             const {credit_card_no} = creditCard.rows[0];
+
+            let date = new Date()
+            let order_date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+            let result = await db.query(`INSERT INTO "order" (order_date, status, customer_id, credit_card_no, street, city, state) values ('${order_date}', 'status', '${customer_id}', '${credit_card_no}', '${street}', '${city}', '${state}')`);
+
+            // 删除原有购物车数据
+            let deleteResult = await db.query(`DELETE from shopping_cart where customer_id = ${customer_id}`);
+
+            return true
         } catch (error) {
-            
+            return null;
         }
     }
 }

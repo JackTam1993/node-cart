@@ -61,25 +61,33 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
     const {customer_name, password} = req.body;
 
-    // 从数据库判断账号密码是否正确
-    let customer_id = await login.checkPassword(customer_name, password);
+    try {
+        // 从数据库判断账号密码是否正确
+        let customer_id = await login.checkPassword(customer_name, password);
 
-    // 正确的话返回token，错误的话返回错误信息
-    if(customer_id) {
-        let token = auth.sign({
-            customer_id
-        });
-    
-        res.json({
-            code: 0,
-            data: token
-        })
-    } else {
+        // 正确的话返回token，错误的话返回错误信息
+        if(customer_id) {
+            let token = auth.sign({
+                customer_id
+            });
+        
+            res.json({
+                code: 0,
+                data: token
+            })
+        } else {
+            res.json({
+                code: 1,
+                data: 'no such a user'
+            })
+        }
+    } catch (error) {
         res.json({
             code: 1,
             data: 'no such a user'
         })
     }
+    
     
 })
 
