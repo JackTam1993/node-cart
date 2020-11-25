@@ -5,6 +5,7 @@ const db = require('../db/db');
 const login = require('../common/login/login');
 const auth = require('../common/auth/auth');
 const register = require('../common/register/register');
+const { default: warehouse } = require('../common/warehouse/warehouse');
 
 let checkLogin = (req, res, next) => {
     const {token} = req.headers;
@@ -77,6 +78,61 @@ router.post('/login', async (req, res, next) => {
         })
     }
     
+})
+
+// 获取仓库列表
+router.get('/warehouse-list', checkLogin, (staff_id, req, res, next) => {
+    try {
+        let result = warehouse.getWarehouseList();
+
+        res.json({
+            code: 0,
+            data: result
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 更新仓库信息
+router.post('/warehouse-update', checkLogin, (staff_id, req, res, next) => {
+
+    const {warehouse_id, warehouse_name, capacity, street, state, city} = req.body;
+    try {
+        let result = await warehouse.updateWarehouse(warehouse_id, warehouse_name, capacity, street, state, city)
+
+        return res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 删除仓库
+router.post('/warehouse/delete', checkLogin, (staff_id, req, res, next) => {
+
+    const {warehouse_id} = req.body;
+    try {
+        let result = await warehouse.deleteWarehouse(warehouse_id);
+
+        return res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
 })
 
 module.exports = router;
