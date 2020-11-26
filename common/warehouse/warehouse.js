@@ -51,4 +51,4 @@ const warehouse = {
     }
 }
 
-export default warehouse;
+module.exports = warehouse;
