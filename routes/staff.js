@@ -54,17 +54,17 @@ router.post('/register', async (req, res, next) => {
     }
 })
 
-// 顾客登录接口
+// staff登录接口
 router.post('/login', async (req, res, next) => {
-    const {customer_name, password} = req.body;
+    const {first_name, middle_name, last_name, password} = req.body;
 
     // 从数据库判断账号密码是否正确
-    let customer_id = await login.checkPassword(customer_name, password);
+    let staff_id = await login.checkStaffPassword(first_name, middle_name, last_name, password);
 
     // 正确的话返回token，错误的话返回错误信息
-    if(customer_id) {
+    if(staff_id) {
         let token = auth.sign({
-            customer_id
+            staff_id
         });
     
         res.json({
