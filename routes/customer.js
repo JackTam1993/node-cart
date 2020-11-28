@@ -235,6 +235,25 @@ router.get('/goods/list', async (req, res, next) => {
     }
 })
 
+// 搜索商品
+router.get('/goods/search', async (req, res, next) => {
+    const {keyword} = req.query;
+
+    try {
+        let data = await goods.getItemListByKeyword(keyword);
+
+        res.json({
+            code: 0,
+            data
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
 // 获取商品信息
 router.get('/goods/detail', async (req, res, next) => {
 

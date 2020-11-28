@@ -27,6 +27,15 @@ const goods = {
         } catch (error) {
             return null
         }
+    },
+    async getItemListByKeyword(keyword) {
+        try {
+            let result = await db.query(`select * from product where product_name like '%${keyword}%'`);
+
+            return result.rows;
+        } catch (error) {
+            return null
+        }
     }
 }
 
