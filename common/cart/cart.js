@@ -25,7 +25,7 @@ const cart = {
     async getCartList(customer_id) {
 
         try {
-            let result = await db.query(`select* from shopping_cart where shopping_cart.customer_id = ${customer_id}`);
+            let result = await db.query(`select * from shopping_cart left join product on shopping_cart.product_id = product.product_id right join product_price on shopping_cart.product_id = product_price.product_id where shopping_cart.customer_id = ${customer_id}`);
 
             return result.rows;
         } catch (err) {
