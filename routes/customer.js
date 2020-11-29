@@ -337,12 +337,26 @@ router.post('/cart/submit', checkLogin, async (customer_id, req, res, next) => {
     const {address_id} = req.body;
 
     try {
-        let data = await cart.cartSubmit(customer_id, address_id);
+        // submit前检查一下仓库余额够不够
+        let remain = await cart.checkRemainAmount(customer_id);
 
-        res.json({
-            code: 0,
-            data: 'success'
-        })
+        if(remain.length > 0) {
+            // 告诉前端哪些扣不了
+
+            let productNameArr = remain.map(item => item.product_name)
+            res.json({
+                code: 1,
+                data: `${productNameArr.join('、')}数量不足`
+            })
+        } else {
+            let data = await cart.cartSubmit(customer_id, address_id);
+
+            res.json({
+                code: 0,
+                data: 'success'
+            })
+        }
+        
     } catch (error) {
         res.json({
             code: 1,

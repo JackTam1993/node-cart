@@ -54,6 +54,19 @@ const cart = {
         } catch (error) {
             return null;
         }
+    },
+    async checkRemainAmount(customer_id) {
+        // 检查用户购物车中所有商品是否够扣
+        try {
+            let result = await db.query(`select * from shopping_cart left join product on shopping_cart.product_id = product.product_id right join product_price on shopping_cart.product_id = product_price.product_id where shopping_cart.customer_id = ${customer_id}`);
+
+            let {rows} = result
+            let item = rows.filter(item => item.amount < item.quantity);
+            
+            return item;
+        } catch (err) {
+            return false;
+        }
     }
 }
 
