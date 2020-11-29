@@ -343,10 +343,11 @@ router.post('/cart/submit', checkLogin, async (customer_id, req, res, next) => {
         if(remain.length > 0) {
             // 告诉前端哪些扣不了
 
-            let productNameArr = remain.map(item => item.product_name)
+            let productNameArr = remain.map(item => item.product_id)
             res.json({
                 code: 1,
-                data: `${productNameArr.join('、')}数量不足`
+                msg: '商品数量不足',
+                data: productNameArr
             })
         } else {
             let data = await cart.cartSubmit(customer_id, address_id);
