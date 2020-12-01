@@ -255,6 +255,25 @@ router.get('/goods/list', async (req, res, next) => {
     }
 })
 
+// 搜索商品
+router.get('/goods/search', async (req, res, next) => {
+    const {keyword} = req.query;
+
+    try {
+        let data = await goods.getItemListByKeyword(keyword);
+
+        res.json({
+            code: 0,
+            data
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
 // 获取商品信息
 router.get('/goods/detail', async (req, res, next) => {
 
@@ -338,12 +357,27 @@ router.post('/cart/submit', checkLogin, async (customer_id, req, res, next) => {
     const {address_id} = req.body;
 
     try {
-        let data = await cart.cartSubmit(customer_id, address_id);
+        // submit前检查一下仓库余额够不够
+        let remain = await cart.checkRemainAmount(customer_id);
 
-        res.json({
-            code: 0,
-            data: 'success'
-        })
+        if(remain.length > 0) {
+            // 告诉前端哪些扣不了
+
+            let productNameArr = remain.map(item => item.product_id)
+            res.json({
+                code: 1,
+                msg: '商品数量不足',
+                data: productNameArr
+            })
+        } else {
+            let data = await cart.cartSubmit(customer_id, address_id);
+
+            res.json({
+                code: 0,
+                data: 'success'
+            })
+        }
+        
     } catch (error) {
         res.json({
             code: 1,

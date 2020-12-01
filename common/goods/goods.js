@@ -21,9 +21,18 @@ const goods = {
     },
     async getItemDetail(product_id) {
         try {
-            let result = await db.query(`SELECT * FROM product LEFT JOIN product_detail ON product.product_id = product_detail.product_id WHERE product.product_id = ${product_id}`);
+            let result = await db.query(`SELECT * FROM product LEFT JOIN product_detail ON product.product_id = product_detail.product_id right join product_price on product.product_id = product_price.product_id WHERE product.product_id = ${product_id}`);
 
             return result.rows[0];
+        } catch (error) {
+            return null
+        }
+    },
+    async getItemListByKeyword(keyword) {
+        try {
+            let result = await db.query(`select * from product where product_name like '%${keyword}%'`);
+
+            return result.rows;
         } catch (error) {
             return null
         }
