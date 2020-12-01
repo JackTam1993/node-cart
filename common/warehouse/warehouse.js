@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-25 16:26:12
- * @LastEditTime: 2020-12-01 11:53:01
+ * @LastEditTime: 2020-12-01 17:44:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \node-cart\common\warehouse\warehouse.js
@@ -42,6 +42,21 @@ const warehouse = {
         // 删除仓库
         try {
             let result = await db.query(`delete * from warehouse where warehouse_id = ${warehouse_id}`);
+
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    },
+    async addWarehouse(warehouse_name, capacity, street, state, city) {
+        try {
+            let address = await db.query(`insert into address (street, city, state) values ('${street}', '${city}', '${state}' )`);
+            // 这个地方感觉会有问题，之后再看
+            let addressItem = await db.query(`select * from address where street = '${street}' and city = '${city}' and state = '${state}'`);
+            let address_id = addressItem.rows[addressItem.rows.length - 1].address_id;
+
+            let result = await db.query(`insert into warehouse (warehouse_name, capacity, address_id) values ('${warehouse_name}', '${capacity}', '${address_id}' )`)
 
             return true;
         } catch (error) {

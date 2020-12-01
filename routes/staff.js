@@ -97,6 +97,26 @@ router.get('/warehouse-list', checkLogin, async (staff_id, req, res, next) => {
     }
 })
 
+// 增加仓库
+router.post('/warehouse-add', checkLogin, async (staff_id, req, res, next) => {
+
+    const {warehouse_name, capacity, street, state, city} = req.body;
+
+    try {
+        let result = await warehouse.addWarehouse(warehouse_name, capacity, street, state, city);
+
+        return res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
 // 更新仓库信息
 router.post('/warehouse-update', checkLogin, async (staff_id, req, res, next) => {
 
