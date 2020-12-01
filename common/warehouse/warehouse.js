@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-25 16:26:12
- * @LastEditTime: 2020-11-25 16:51:05
+ * @LastEditTime: 2020-12-01 11:53:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \node-cart\common\warehouse\warehouse.js
@@ -27,9 +27,9 @@ const warehouse = {
             let warehouseRowData = await db.query(`SELECT * FROM warehouse where warehouse_id = ${warehouse_id}`);
             let address_id = warehouseRowData.rows[0].address_id;
 
-            let [warehouseResult, addressResult] = Promise.all([
-                await db.query(`update warehouse set warehouse_name = '${warehouse_name}', capacity = '${capacity}' where warehouse_id = ${warehouse_id}`),
-                await db.query(`update address set street = '${street}', state = '${state}', city = '${city}' where address_id = ${address_id}`)
+            let [warehouseResult, addressResult] = await Promise.all([
+                db.query(`update warehouse set warehouse_name = '${warehouse_name}', capacity = '${capacity}' where warehouse_id = ${warehouse_id}`),
+                db.query(`update address set street = '${street}', state = '${state}', city = '${city}' where address_id = ${address_id}`)
             ])
 
             return true;

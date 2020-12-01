@@ -52,11 +52,20 @@ const customerInfo = {
     },
     async updateAddress(customer_id, street, state, city, address_id) {
         try {
-            let address = db.query(`update address set state = '${state}', street = '${street}', city = '${city}' from customer_addr where address.address_id = customer_addr.address_id and customer_addr.customer_id = '${customer_id}' and address.address_id = '${address_id}'`);
+            let address = await db.query(`update address set state = '${state}', street = '${street}', city = '${city}' from customer_addr where address.address_id = customer_addr.address_id and customer_addr.customer_id = '${customer_id}' and address.address_id = '${address_id}'`);
 
             return true;
         } catch (error) {
             
+        }
+    },
+    async deleteAddress(address_id) {
+        try {
+            let result = await db.query(`DELETE FROM address WHERE address_id = ${address_id}`);
+
+            return true;
+        } catch (error) {
+            console.log(error);
         }
     }
 }

@@ -197,6 +197,26 @@ router.post('/update-address', checkLogin,  async (customer_id, req, res, next) 
 
 })
 
+// 删除地址
+router.post('/delete-address', checkLogin, async (customer_id, req, res, next) => {
+
+    const {address_id} = req.body;
+
+    try {
+        let result = await customerInfo.deleteAddress(address_id);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+});
+
 // 获取分类列表
 router.get('/goods/category', async (req, res, next) => {
 
