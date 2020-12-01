@@ -6,6 +6,7 @@ const login = require('../common/login/login');
 const auth = require('../common/auth/auth');
 const register = require('../common/register/register');
 const warehouse = require('../common/warehouse/warehouse');
+const staff = require('../common/staff/staff');
 
 let checkLogin = (req, res, next) => {
     const {token} = req.headers;
@@ -75,6 +76,45 @@ router.post('/login', async (req, res, next) => {
         res.json({
             code: 1,
             data: 'no such a user'
+        })
+    }
+    
+})
+
+// 获取staff信息接口
+router.get('/staff-info', checkLogin, async (staff_id, req, res, next) => {
+
+    try {
+        let data = await staff.getStaffInfo(staff_id);
+
+        res.json({
+            code: 0,
+            data
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 更新staff信息接口
+router.post('/edit-staff-info', checkLogin, async (staff_id, req, res, next) => {
+
+    const {first_name, middle_name, last_name, street, state, city} = req.body;
+
+    try {
+        let result = await staff.updateStaffInfo(staff_id, first_name, middle_name, last_name, street, state, city);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 0,
+            data: 'error'
         })
     }
     
