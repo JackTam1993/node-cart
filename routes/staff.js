@@ -7,6 +7,7 @@ const auth = require('../common/auth/auth');
 const register = require('../common/register/register');
 const warehouse = require('../common/warehouse/warehouse');
 const staff = require('../common/staff/staff');
+const stock = require('../common/stock/stock');
 
 let checkLogin = (req, res, next) => {
     const {token} = req.headers;
@@ -186,6 +187,44 @@ router.post('/warehouse/delete', checkLogin, async (staff_id, req, res, next) =>
         return res.json({
             code: 0,
             data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 获取所有商品
+router.get('/stock', async (req, res, next) => {
+
+    try {
+        let data = await stock.getAllStock();
+
+        return res.json({
+            code: 0,
+            data
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 根据warehouse_id获取商品
+router.get('/stock', async (req, res, next) => {
+
+    const {warehouse_id} = req.query;
+
+    try {
+        let data = await stock.getStockByWarehouseId(warehouse_id);
+
+        return res.json({
+            code: 0,
+            data
         })
     } catch (error) {
         res.json({
