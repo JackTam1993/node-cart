@@ -22,7 +22,7 @@ let checkLogin = (req, res, next) => {
 
     // 验证用户登录信息
     let verifyResult = auth.verify(token);
-    if(!verifyResult.customer_id) {
+    if(!verifyResult.staff_id) {
         res.json({
             code: 1,
             data: '用户未登录'
@@ -30,7 +30,7 @@ let checkLogin = (req, res, next) => {
 
         return;
     }
-    next(verifyResult.customer_id);
+    next(verifyResult.staff_id);
 }
 
 // staff注册接口
@@ -83,7 +83,7 @@ router.post('/login', async (req, res, next) => {
 // 获取仓库列表
 router.get('/warehouse-list', checkLogin, async (staff_id, req, res, next) => {
     try {
-        let result = warehouse.getWarehouseList();
+        let result = await warehouse.getWarehouseList();
 
         res.json({
             code: 0,
