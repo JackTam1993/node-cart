@@ -1,3 +1,4 @@
+const { query } = require('../../db/db');
 var db = require('../../db/db');
 
 const goods = {
@@ -35,6 +36,37 @@ const goods = {
             return result.rows;
         } catch (error) {
             return null
+        }
+    },
+    async addItem(product_name, amount, category_id, size, type, content, state, price) {
+        try {
+            let result = db.query(`insert into product (product_name, amount, category_id, size) values ('${product_name}', '${amount}', '${category_id}', '${size}')`);
+
+            // 获取最新的product_id
+            let max = await db.query(`select max(product_id) from product`);
+            const product_id = max.rows[0].max;
+
+            await Promise.all([
+                db.query(`insert into product_detail (product_id, content, type) values ('${product_id}', '${content}', '${type}')`),
+                db.query(`insert into product_detail (product_id, state, price) values ('${product_id}', '${state}', '${price}')`)
+            ])
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    },
+    async editItem(product_name, amount, category_id, size, type, content, state, price, product_id) {
+        try {
+            await Promise.all([
+                db.query(`update product set product_name = '${product_name}', amount = '${amount}', category_id = '${category_id}', size = '${size}' where product_id = ${product_id}`),
+                db.query(`update product_detail set product_id = '${product_id}', content = '${content}', type = '${type}' where product_id = ${product_id}`),
+                db.query(`update product_detail set state = '${state}', content = '${price}', type = '${price}' where product_id = ${product_id}`)
+            ])
+
+            return true;
+        } catch (error) {
+            return false;
         }
     }
 }

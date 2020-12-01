@@ -8,6 +8,7 @@ const register = require('../common/register/register');
 const warehouse = require('../common/warehouse/warehouse');
 const staff = require('../common/staff/staff');
 const stock = require('../common/stock/stock');
+const goods = require('../common/goods/goods');
 
 let checkLogin = (req, res, next) => {
     const {token} = req.headers;
@@ -225,6 +226,46 @@ router.get('/stock', async (req, res, next) => {
         return res.json({
             code: 0,
             data
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 新增商品
+router.post('/goods/add', checkLogin, async (staff_id, req, res, next) => {
+
+    const {product_name, amount, category_id, size, type, content, state, price} = req.body;
+
+    try {
+        let result = await goods.addItem(product_name, amount, category_id, size, type, content, state, price);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 修改商品
+router.post('/goods/edit', checkLogin, async (staff_id, req, res, next) => {
+
+    const {product_name, amount, category_id, size, type, content, state, price, product_id} = req.body;
+
+    try {
+        let result = await goods.editItem(product_name, amount, category_id, size, type, content, state, price, product_id);
+
+        res.json({
+            code: 0,
+            data: 'success'
         })
     } catch (error) {
         res.json({
