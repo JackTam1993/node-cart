@@ -275,4 +275,23 @@ router.post('/goods/edit', checkLogin, async (staff_id, req, res, next) => {
     }
 })
 
+// 删除商品
+router.post('/goods/delete', checkLogin, async (staff_id, req, res, next) => {
+    const {product_id} = req.body;
+
+    try {
+        let result = await goods.deleteItem(product_id);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
 module.exports = router;

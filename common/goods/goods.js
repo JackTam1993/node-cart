@@ -68,6 +68,15 @@ const goods = {
         } catch (error) {
             return false;
         }
+    },
+    async deleteItem(product_id) {
+        try {
+            let result = await db.query(`delete from product where product_id = ${product_id}`);
+
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }
 
