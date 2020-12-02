@@ -47,6 +47,20 @@ const cart = {
             let order_date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
             let result = await db.query(`INSERT INTO "order" (order_date, status, customer_id, credit_card_no, street, city, state) values ('${order_date}', 'status', '${customer_id}', '${credit_card_no}', '${street}', '${city}', '${state}')`);
 
+            // 获取新增的order_id;
+            let max = await db.query(`select max(order_id) from "order"`);
+            const order_id = max.rows[0].max;
+
+            // 新增到order_item表
+            let cartListDB = await db.query(`select * from shopping_cart where customer_id = ${customer_id}`)
+            let cartList = cartListDB.rows;
+
+            for(let i of cartList) {
+                await db.query(`insert into order_item (order_id, product_id, quantity) values (${order_id}, ${i.product_id}, ${i.quantity})`);
+                // product表减数量
+                await db.query(`update product set amount = amount - ${i.quantity} where product_id = ${i.product_id}`)
+            }
+
             // 删除原有购物车数据
             let deleteResult = await db.query(`DELETE from shopping_cart where customer_id = ${customer_id}`);
 
