@@ -216,7 +216,7 @@ router.get('/stock', async (req, res, next) => {
 })
 
 // 根据warehouse_id获取商品
-router.get('/stock', async (req, res, next) => {
+router.get('/stock-by-warehouseid', async (req, res, next) => {
 
     const {warehouse_id} = req.query;
 
