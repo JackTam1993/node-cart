@@ -48,7 +48,7 @@ const goods = {
 
             await Promise.all([
                 db.query(`insert into product_detail (product_id, content, type) values ('${product_id}', '${content}', '${type}')`),
-                db.query(`insert into product_detail (product_id, state, price) values ('${product_id}', '${state}', '${price}')`)
+                db.query(`insert into product_price (product_id, state, price) values ('${product_id}', '${state}', '${price}')`),
             ])
 
             return true;
