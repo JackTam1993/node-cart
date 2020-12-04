@@ -372,12 +372,18 @@ router.post('/cart/submit', checkLogin, async (customer_id, req, res, next) => {
         } else {
             let data = await cart.cartSubmit(customer_id, address_id);
 
-            res.json({
-                code: 0,
-                data: 'success'
-            })
+            if(data) {
+                res.json({
+                    code: 0,
+                    data: 'success'
+                })
+            } else {
+                res.json({
+                    code: 1,
+                    data: null
+                })
+            }
         }
-        
     } catch (error) {
         res.json({
             code: 1,

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-25 16:26:12
- * @LastEditTime: 2020-12-01 17:44:52
+ * @LastEditTime: 2020-12-04 11:03:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \node-cart\common\warehouse\warehouse.js
@@ -12,7 +12,7 @@ const warehouse = {
     async getWarehouseList() {
         // 获取仓库列表
         try {
-            let result = await db.query(`SELECT * FROM warehouse`);
+            let result = await db.query(`SELECT * FROM warehouse LEFT JOIN address ON warehouse.address_id = address.address_id`);
 
             return result.rows;
         } catch (error) {
@@ -41,7 +41,7 @@ const warehouse = {
     async deleteWarehouse(warehouse_id) {
         // 删除仓库
         try {
-            let result = await db.query(`delete * from warehouse where warehouse_id = ${warehouse_id}`);
+            let result = await db.query(`delete from warehouse where warehouse_id = ${warehouse_id}`);
 
             return true;
         } catch (error) {
