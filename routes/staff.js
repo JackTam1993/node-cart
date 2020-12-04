@@ -238,10 +238,10 @@ router.get('/stock-by-warehouseid', async (req, res, next) => {
 // 新增商品
 router.post('/goods/add', checkLogin, async (staff_id, req, res, next) => {
 
-    const {product_name, amount, category_id, size, type, content, state, price} = req.body;
+    const {product_name, amount, category_id, size, type, content, state, price, warehouse_id, quantity} = req.body;
 
     try {
-        let result = await goods.addItem(product_name, amount, category_id, size, type, content, state, price);
+        let result = await goods.addItem(product_name, amount, category_id, size, type, content, state, price, warehouse_id, quantity);
 
         res.json({
             code: 0,
