@@ -37,7 +37,7 @@ const cart = {
         try {
             // 获取用户地址和信用卡信息
             let [creditCard, address] = await Promise.all([
-                db.query(`SELECT * FROM credit_card where address_id = '${address_id}' and customer_id = '${customer_id}'`),
+                db.query(`SELECT * FROM credit_card where customer_id = '${customer_id}'`),
                 db.query(`SELECT * FROM customer_addr LEFT JOIN address ON customer_addr.address_id = address.address_id where customer_addr.customer_id = ${customer_id} AND customer_addr.address_id = ${address_id}`)
             ])
             const {street, city, state} = address.rows[0];
