@@ -282,10 +282,17 @@ router.post('/goods/delete', checkLogin, async (staff_id, req, res, next) => {
     try {
         let result = await goods.deleteItem(product_id);
 
-        res.json({
-            code: 0,
-            data: 'success'
-        })
+        if(result) {
+            res.json({
+                code: 0,
+                data: 'success'
+            })
+        } else {
+            res.json({
+                code: 1,
+                data: '删除失败，其他订单中存在该商品'
+            })
+        }
     } catch (error) {
         res.json({
             code: 1,

@@ -217,6 +217,46 @@ router.post('/delete-address', checkLogin, async (customer_id, req, res, next) =
     }
 });
 
+// 增加信用卡
+router.post('/credit-card/add', checkLogin, async (customer_id, req, res, next) => {
+
+    const {credit_card_no, vaild_thru, cvv, street, state, city} = req.body;
+
+    try {
+        let result = await customerInfo.addCreditCard(customer_id, credit_card_no, vaild_thru, cvv, street, state, city);
+
+        res.json({
+            code: 0,
+            data: 'success'
+        })
+    } catch (error) {
+        res.json({
+            code: 1,
+            data: null
+        })
+    }
+})
+
+// 修改信用卡信息
+// router.post('/credit-card/edit', checkLogin, async (customer_id, req, res, next) => {
+
+//     const {credit_card_no, vaild_thru, cvv, street, state, city} = req.body;
+
+//     try {
+//         let result = await customerInfo.editCreditCard(customer_id, credit_card_no, vaild_thru, cvv, street, state, city);
+
+//         res.json({
+//             code: 0,
+//             data: 'success'
+//         })
+//     } catch (error) {
+//         res.json({
+//             code: 1,
+//             data: null
+//         })
+//     }
+// })
+
 // 获取分类列表
 router.get('/goods/category', async (req, res, next) => {
 

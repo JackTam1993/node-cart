@@ -67,6 +67,35 @@ const customerInfo = {
         } catch (error) {
             console.log(error);
         }
+    },
+    async addCreditCard(customer_id, credit_card_no, vaild_thru, cvv, street, state, city) {
+        try {
+            let address = await db.query(`insert into address (street, city, state) values ('${street}', '${city}', '${state}' )`);
+            // 这个地方感觉会有问题，之后再看
+            let addressItem = await db.query(`select * from address where street = '${street}' and city = '${city}' and state = '${state}'`);
+            let address_id = addressItem.rows[addressItem.rows.length - 1].address_id;
+
+            // 新增到credit_card表
+            let result = await db.query(`insert into credit_card (customer_id, credit_card_no, vaild_thru, cvv, address_id) values (${customer_id}, ${credit_card_no}, '${vaild_thru}', ${cvv}, ${address_id})`);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    },
+    async editCreditCard(customer_id, credit_card_no, vaild_thru, cvv, street, state, city) {
+        try {
+            let creditCardItem = await db.query(`select * from credit_card where customer_id = '${customer_id}'`);
+
+            let address_id = creditCardItem.rows[0].address_id;
+            let [addressResult, creditCardResult] = await Promise.all([
+                db.query(`update address set state = '${state}', street = '${street}', city = '${city}' where address_id = ${address_id}`),
+                db.query(`update credit_card set credit_card_no = ${credit_card_no}, vaild_thru = '${vaild_thru}', cvv = ${cvv} where customer_id = ${customer_id}`)
+            ])
+
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }
 
