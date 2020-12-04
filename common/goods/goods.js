@@ -38,7 +38,7 @@ const goods = {
             return null
         }
     },
-    async addItem(product_name, amount, category_id, size, type, content, state, price) {
+    async addItem(product_name, amount, category_id, size, type, content, state, price, warehouse_id, quantity) {
         try {
             let result = db.query(`insert into product (product_name, amount, category_id, size) values ('${product_name}', '${amount}', '${category_id}', '${size}')`);
 
@@ -49,6 +49,7 @@ const goods = {
             await Promise.all([
                 db.query(`insert into product_detail (product_id, content, type) values ('${product_id}', '${content}', '${type}')`),
                 db.query(`insert into product_price (product_id, state, price) values ('${product_id}', '${state}', '${price}')`),
+                db.query(`insert into stock (product_id, warehouse_id, quantity) values ('${product_id}', '${warehouse_id}', '${quantity}')`),
             ])
 
             return true;
