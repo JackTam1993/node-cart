@@ -22,7 +22,7 @@ const goods = {
     },
     async getItemDetail(product_id) {
         try {
-            let result = await db.query(`SELECT * FROM product LEFT JOIN product_detail ON product.product_id = product_detail.product_id right join product_price on product.product_id = product_price.product_id WHERE product.product_id = ${product_id}`);
+            let result = await db.query(`SELECT * FROM product LEFT JOIN product_detail ON product.product_id = product_detail.product_id right join product_price on product.product_id = product_price.product_id right join category on product.category_id = category.category_id WHERE product.product_id = ${product_id}`);
 
             return result.rows[0];
         } catch (error) {

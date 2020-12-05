@@ -59,13 +59,13 @@ router.post('/register', async (req, res, next) => {
 
 // staff登录接口
 router.post('/login', async (req, res, next) => {
-    const {first_name, middle_name, last_name, password} = req.body;
+    const {staff_id, password} = req.body;
 
     // 从数据库判断账号密码是否正确
-    let staff_id = await login.checkStaffPassword(first_name, middle_name, last_name, password);
+    let hasStaff = await login.checkStaffPassword(staff_id, password);
 
     // 正确的话返回token，错误的话返回错误信息
-    if(staff_id) {
+    if(hasStaff) {
         let token = auth.sign({
             staff_id
         });

@@ -12,12 +12,11 @@ const login = {
             return false;
         }
     },
-    async checkStaffPassword(first_name, middle_name, last_name, password) {
+    async checkStaffPassword(staff_id, password) {
         try {
-            const result = await db.query(`SELECT * FROM staff WHERE first_name = '${first_name}' and middle_name = '${middle_name}' and last_name = '${last_name}'`);
-
-            let user = result.rows.find(item => item.password == password);
-            return user.staff_id;
+            const result = await db.query(`SELECT * FROM staff WHERE staff_id = ${staff_id} and password = '${password}'`);
+            
+            return result.rows.length > 0;
         } catch (error) {
             console.log(error)
             return false;
